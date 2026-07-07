@@ -1,0 +1,59 @@
+Introduction to Streamlit
+
+What is Streamlit?
+Streamlit is a Python library that turns a regular Python script into an interactive web application, without requiring any HTML, CSS, or JavaScript. It is widely used for building quick dashboards, data apps, and demos for machine learning projects.
+
+Installing Streamlit
+Streamlit can be installed with pip:
+    pip install streamlit
+
+Running a Streamlit app
+A Streamlit app is just a Python file. To run it as a web app:
+    streamlit run app.py
+This starts a local web server and automatically opens the app in a browser tab, usually at http://localhost:8501.
+
+Displaying text and data
+The most basic Streamlit commands display content on the page:
+    st.title("My App")
+    st.write("Some text or data")
+    st.text("Plain text")
+st.write is especially flexible and can display strings, numbers, dataframes, and charts depending on what is passed to it.
+
+Getting user input
+Streamlit provides widgets for collecting input from the user. Common examples include:
+    name = st.text_input("Enter your name")
+    number = st.slider("Pick a number", 0, 100)
+    clicked = st.button("Submit")
+    choice = st.selectbox("Choose one", ["Option A", "Option B"])
+Each widget returns the current value chosen by the user, which can be used immediately in the rest of the script.
+
+How Streamlit reruns scripts
+An important concept in Streamlit is that the entire script reruns from top to bottom every time the user interacts with a widget, such as clicking a button or moving a slider. This is different from traditional web frameworks where only part of the page updates. Because of this behavior, expensive operations like loading a large file or calling an API should be cached so they do not repeat unnecessarily on every rerun.
+
+Caching
+To avoid repeating slow operations, Streamlit provides a caching decorator:
+    @st.cache_data
+    def load_data():
+        # expensive operation here
+        return data
+Functions decorated this way only re-run when their inputs change, saving significant time on reruns caused by user interaction.
+
+Session state
+Because scripts rerun constantly, Streamlit needs a way to remember values between reruns, such as a running counter or chat history. This is done using st.session_state, a dictionary-like object that persists across reruns within the same browser session:
+    if "count" not in st.session_state:
+        st.session_state.count = 0
+    if st.button("Increment"):
+        st.session_state.count += 1
+    st.write(st.session_state.count)
+
+Layout
+Streamlit offers simple layout tools to organize content, including columns and sidebars:
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write("Left side")
+    with col2:
+        st.write("Right side")
+    st.sidebar.write("This appears in the sidebar")
+
+Deploying a Streamlit app
+Streamlit Community Cloud allows free public deployment directly from a GitHub repository. Once the code is pushed to GitHub, the app can be linked and deployed with a few clicks, producing a public URL. Any secret values, such as API keys, should be added through the platform's secrets settings rather than committed to the repository.

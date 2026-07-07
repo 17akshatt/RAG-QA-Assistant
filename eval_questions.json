@@ -1,0 +1,42 @@
+[
+  {
+    "question": "How do I create a Python virtual environment?",
+    "expected_answer": "Use the built-in venv module by running: python -m venv venv",
+    "expected_sources": ["python_virtual_environments.txt"]
+  },
+  {
+    "question": "What command records my project's dependencies to a file, and what command restores them?",
+    "expected_answer": "pip freeze > requirements.txt saves the dependencies; pip install -r requirements.txt restores them.",
+    "expected_sources": ["python_virtual_environments.txt"]
+  },
+  {
+    "question": "What does a 429 status code mean in a REST API?",
+    "expected_answer": "429 Too Many Requests means the client has exceeded a rate limit.",
+    "expected_sources": ["rest_api_basics.txt"]
+  },
+  {
+    "question": "Which HTTP method completely replaces an existing resource, and which one only updates part of it?",
+    "expected_answer": "PUT replaces an existing resource entirely; PATCH updates part of it.",
+    "expected_sources": ["rest_api_basics.txt"]
+  },
+  {
+    "question": "What command shows which files have changed since the last Git commit?",
+    "expected_answer": "git status lists modified files, new untracked files, and files staged for the next commit.",
+    "expected_sources": ["git_basics.txt"]
+  },
+  {
+    "question": "How do you create a new Git branch and switch to it in a single command?",
+    "expected_answer": "git checkout -b new-feature creates the branch and switches to it in one step.",
+    "expected_sources": ["git_basics.txt"]
+  },
+  {
+    "question": "What Streamlit decorator should you use to avoid repeating a slow operation on every script rerun?",
+    "expected_answer": "@st.cache_data caches the result so the function only re-runs when its inputs change.",
+    "expected_sources": ["streamlit_basics.txt"]
+  },
+  {
+    "question": "What is the boiling point of water in Celsius?",
+    "expected_answer": "The assistant should say it doesn't know, since this fact is not covered in any of the indexed documents.",
+    "expected_sources": []
+  }
+]

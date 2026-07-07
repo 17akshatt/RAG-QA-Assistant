@@ -1,0 +1,54 @@
+Git Basics for Beginners
+
+What is Git?
+Git is a version control system that tracks changes to files over time. It lets you save snapshots of your project, called commits, and go back to any previous snapshot if something breaks. Git also makes it possible for multiple people to work on the same project without overwriting each other's changes.
+
+Initializing a repository
+To start tracking a project with Git, run the following command inside the project folder:
+    git init
+This creates a hidden .git folder that stores the entire history of the project.
+
+Checking status
+To see which files have changed since the last commit, run:
+    git status
+This lists modified files, new untracked files, and files staged for the next commit.
+
+Staging changes
+Before committing, changes must be staged, meaning marked as ready to be included in the next commit. To stage a specific file:
+    git add filename.py
+To stage every changed file at once:
+    git add .
+
+Committing changes
+Once changes are staged, save them as a permanent snapshot with:
+    git commit -m "a short description of what changed"
+Each commit should ideally represent one logical change, and the message should explain what changed and why.
+
+Viewing history
+To see the full list of past commits, run:
+    git log
+Each entry shows the commit's unique ID, author, date, and message.
+
+Branches
+A branch is an independent line of development. The default branch is usually called "main". Creating a new branch lets you work on a feature or fix without affecting the main codebase until it is ready:
+    git branch new-feature
+    git checkout new-feature
+Or, as a shortcut, create and switch in one step:
+    git checkout -b new-feature
+
+Merging
+Once work on a branch is complete, it can be merged back into main:
+    git checkout main
+    git merge new-feature
+If both branches changed the same lines of the same file, Git cannot automatically decide which version to keep, resulting in a merge conflict that must be resolved manually.
+
+Connecting to a remote repository
+A remote repository, commonly hosted on GitHub, is a copy of the project stored online. To connect a local repository to a remote one:
+    git remote add origin https://github.com/username/repo.git
+To upload local commits to the remote repository:
+    git push origin main
+To download changes made by others:
+    git pull origin main
+
+The .gitignore file
+A .gitignore file lists files and folders that Git should never track, such as virtual environments, secret keys, and temporary files. This prevents sensitive or unnecessary files from accidentally being uploaded to a public repository. A typical .gitignore for a Python project includes entries like venv/, __pycache__/, and .env.

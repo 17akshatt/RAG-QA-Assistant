@@ -1,0 +1,40 @@
+Python Virtual Environments Guide
+
+What is a virtual environment?
+A virtual environment is an isolated Python environment that has its own installation directories and does not share libraries with other virtual environments or the system-wide Python installation. This means you can install different versions of the same package for different projects without conflicts.
+
+Why use a virtual environment?
+Without virtual environments, all Python packages you install go into one global location. If Project A needs version 1.0 of a library and Project B needs version 2.0 of the same library, installing one will break the other. Virtual environments solve this by giving each project its own private set of installed packages.
+
+Creating a virtual environment
+To create a virtual environment, use the built-in venv module:
+    python -m venv venv
+This creates a folder named "venv" containing a private copy of the Python interpreter and a place to install packages.
+
+Activating a virtual environment
+On Windows, activate it with:
+    venv\Scripts\activate
+On macOS or Linux, activate it with:
+    source venv/bin/activate
+Once activated, your terminal prompt usually changes to show the environment name in parentheses, confirming it is active. Any package you install while activated goes into this environment only.
+
+Deactivating a virtual environment
+To leave the virtual environment and return to your system's global Python, simply run:
+    deactivate
+
+Installing packages inside a virtual environment
+Once activated, use pip as normal:
+    pip install requests
+This installs the package only inside the active virtual environment, not system-wide.
+
+Saving and restoring dependencies
+To record every package your project depends on, run:
+    pip freeze > requirements.txt
+This creates a text file listing each installed package and its exact version. Anyone else who wants to run your project can recreate the identical environment by running:
+    pip install -r requirements.txt
+
+Common mistakes
+A common mistake is forgetting to activate the virtual environment before installing packages, which causes packages to install globally instead. Another common mistake is committing the venv folder itself to version control; instead, only requirements.txt should be committed, and the venv folder should be listed in .gitignore.
+
+When to create a new virtual environment
+Best practice is to create one virtual environment per project. This keeps dependencies isolated and makes it easy to delete and recreate the environment from scratch if something goes wrong, without affecting any other project on the machine.

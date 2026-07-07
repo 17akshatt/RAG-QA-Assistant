@@ -1,0 +1,37 @@
+Understanding REST APIs
+
+What is a REST API?
+REST stands for Representational State Transfer. A REST API is a way for two computer systems to communicate over the internet using standard HTTP requests. One system, the client, sends a request to another system, the server, and the server sends back a response. Most modern web and mobile apps talk to their backends this way.
+
+HTTP methods
+REST APIs rely on a small set of HTTP methods, each with a specific meaning:
+- GET retrieves data without changing anything on the server. For example, fetching a list of users.
+- POST creates a new piece of data. For example, submitting a new order.
+- PUT replaces an existing piece of data entirely.
+- PATCH updates part of an existing piece of data.
+- DELETE removes a piece of data.
+
+Endpoints
+An endpoint is a specific URL that represents a resource. For example, https://api.example.com/users might return a list of users, while https://api.example.com/users/42 might return the single user with ID 42. Well-designed APIs use nouns for endpoints and let the HTTP method describe the action.
+
+Status codes
+Every API response includes a status code indicating what happened:
+- 200 OK means the request succeeded.
+- 201 Created means a new resource was successfully created.
+- 400 Bad Request means the client sent an invalid request.
+- 401 Unauthorized means authentication is missing or invalid.
+- 404 Not Found means the requested resource does not exist.
+- 429 Too Many Requests means the client has exceeded a rate limit.
+- 500 Internal Server Error means something went wrong on the server itself.
+
+Authentication
+Most APIs require some form of authentication so the server knows who is making the request. A common approach is an API key, a secret string included in each request, often in a header like "Authorization: Bearer YOUR_KEY". API keys should never be hardcoded into source code or committed to version control; they are typically stored in environment variables or a secrets manager instead.
+
+Rate limiting
+To prevent abuse and manage server load, many APIs restrict how many requests a client can make in a given time window, known as a rate limit. For example, a free tier might allow 60 requests per minute. Exceeding this limit usually results in a 429 status code, and well-behaved clients implement a delay-and-retry strategy, often called exponential backoff, to handle this gracefully instead of failing immediately.
+
+Request and response bodies
+POST, PUT, and PATCH requests usually include a body containing the data being sent, most commonly formatted as JSON. The server's response also typically returns JSON, containing either the requested data or details about an error.
+
+Idempotency
+An operation is idempotent if performing it multiple times has the same effect as performing it once. GET, PUT, and DELETE are generally idempotent, while POST is not, since sending the same POST request twice usually creates two separate resources.
