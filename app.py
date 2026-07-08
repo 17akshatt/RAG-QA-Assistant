@@ -6,8 +6,11 @@
 
 import os
 
+import chromadb
 import streamlit as st
 from dotenv import load_dotenv
+
+import ingest
 
 # Locally, this reads GEMINI_API_KEY from your .env file, same as every
 # other script in this project.
@@ -24,8 +27,25 @@ if not os.environ.get("GEMINI_API_KEY"):
     except Exception:
         pass  # no .env and no secrets.toml -- ask() will fail with a clear error below
 
-# Import AFTER the key is in the environment: llm.py creates the Gemini
-# client as soon as it's imported, so the key needs to be set up first.
+
+def index_exists():
+    """Check whether the Chroma collection ingest.py builds already exists."""
+    client = chromadb.PersistentClient(path=ingest.CHROMA_DIR)
+    return ingest.COLLECTION_NAME in [c.name for c in client.list_collections()]
+
+
+# The ./chroma folder is listed in .gitignore (it's a generated index, not
+# source code), so a fresh deployment -- like on Streamlit Community Cloud
+# -- starts with no index at all. Locally you'd run `python ingest.py`
+# yourself; here, build it automatically the first time the app runs so
+# the deployed version doesn't crash with "no document index found".
+if not index_exists():
+    with st.spinner("Building document index for the first time... this only happens once."):
+        ingest.build_index()
+
+# Import AFTER the key is in the environment and the index is built:
+# llm.py creates the Gemini client as soon as it's imported, and rag.py
+# connects to the Chroma collection as soon as it's imported.
 from rag import answer
 
 st.set_page_config(page_title="RAG Q&A Assistant", page_icon="📚")

@@ -1,3 +1,4 @@
+
 # Ingestion: read every file in docs/, cut it into small overlapping
 # chunks, and store those chunks in a persistent ChromaDB collection.
 #
@@ -84,16 +85,23 @@ def load_and_chunk_documents():
     return results
 
 
-def main():
+def build_index():
+    """
+    Read docs/, chunk it, and (re)build the persistent Chroma collection
+    from scratch. Returns (chunk_count, file_count).
+
+    This is the reusable core of ingestion -- both the command-line
+    `python ingest.py` and app.py (which needs to build the index itself
+    the first time it runs on a fresh deployment) call this.
+    """
     chunks = load_and_chunk_documents()
     if not chunks:
-        print(f"No .txt, .md, or .pdf files found in {DOCS_DIR}/. Add some and try again.")
-        return
+        return 0, 0
 
     # Store the index on disk at ./chroma so it survives between runs.
     client = chromadb.PersistentClient(path=CHROMA_DIR)
 
-    # Rebuild the collection from scratch each time, so ingest.py always
+    # Rebuild the collection from scratch each time, so the index always
     # reflects exactly what's currently in docs/ -- no stale or duplicate
     # chunks left over from a previous run.
     if COLLECTION_NAME in [c.name for c in client.list_collections()]:
@@ -115,7 +123,15 @@ def main():
     collection.add(ids=ids, documents=documents, metadatas=metadatas)
 
     file_count = len({filename for filename, _ in chunks})
-    print(f"Indexed {len(chunks)} chunks from {file_count} files")
+    return len(chunks), file_count
+
+
+def main():
+    chunk_count, file_count = build_index()
+    if chunk_count == 0:
+        print(f"No .txt, .md, or .pdf files found in {DOCS_DIR}/. Add some and try again.")
+        return
+    print(f"Indexed {chunk_count} chunks from {file_count} files")
 
 
 if __name__ == "__main__":
