@@ -10,11 +10,17 @@
 # Then we print a per-question pass/fail and a final score like "6/8".
 
 import json
+import time
 
 from llm import ask as ask_llm
 from rag import answer
 
 EVAL_FILE = "eval_questions.json"
+
+# The free tier only allows 5 Gemini requests per minute. Each question
+# makes 2 calls (one to answer, one to judge), so pausing briefly between
+# every call keeps us under that limit instead of tripping it.
+SECONDS_BETWEEN_CALLS = 13
 
 JUDGE_SYSTEM_INSTRUCTION = (
     "You are grading whether a generated answer matches an expected answer "
@@ -52,7 +58,10 @@ def main():
         expected_answer = case["expected_answer"]
 
         generated_answer, sources = answer(question)
+        time.sleep(SECONDS_BETWEEN_CALLS)
+
         passed = judge(question, expected_answer, generated_answer)
+        time.sleep(SECONDS_BETWEEN_CALLS)
 
         status = "PASS" if passed else "FAIL"
         print(f"[{i}/{len(test_cases)}] {status} -- {question}")
