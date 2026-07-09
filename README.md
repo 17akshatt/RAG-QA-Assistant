@@ -7,7 +7,11 @@ This is a Retrieval-Augmented Generation (RAG) system: the model doesn't answer 
 <!-- Screenshot: replace with an actual screenshot of the app in Answer/Sources state -->
 <!-- ![screenshot](screenshot.png) -->
 
-**Live demo:** _add your Streamlit Community Cloud URL here after deploying_
+**Live demo:** https://rag-app-assistant-my4m2hkty2ovktagqywdsx.streamlit.app
+
+## Results
+
+The evaluation suite (`eval.py`) scores **8/8** on its test set, which includes negative cases — questions the assistant should refuse to answer because the answer isn't in the documents. It's graded with an LLM-as-judge: Gemini checks whether each generated answer matches the expected one, including honestly saying "I don't know" when it should.
 
 ## How it works
 
@@ -28,6 +32,8 @@ question ──▶ embed ──▶ search ChromaDB ──▶ top 4 relevant chun
 2. **Retrieval** (`rag.py`) — embeds the incoming question the same way, then searches Chroma for the 4 chunks whose meaning is closest to it (semantic search, not keyword matching).
 3. **Grounded generation** (`rag.py`) — builds a prompt containing only those chunks plus the question, and instructs Gemini to answer strictly from that context and cite its sources.
 4. **Evaluation** (`eval.py`) — runs a fixed set of test questions through the same pipeline and uses Gemini as an automatic judge to score answer quality, so correctness is measured, not assumed.
+
+The web app also fails gracefully: if a Gemini API call errors out (e.g. the free-tier quota is exhausted), `app.py` catches it, logs the real error server-side, and shows the user a plain-English message instead of a raw traceback.
 
 ## Stack
 
@@ -62,8 +68,8 @@ rag-qa-assistant/
 
 1. Clone the repo and create a virtual environment:
    ```
-   git clone <your-repo-url>
-   cd rag-qa-assistant
+   git clone https://github.com/17akshatt/RAG-QA-Assistant.git
+   cd RAG-QA-Assistant
    python -m venv venv
    venv\Scripts\activate      # Windows
    source venv/bin/activate   # macOS/Linux

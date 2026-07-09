@@ -5,10 +5,12 @@
 # comes from differs between your machine and Streamlit Community Cloud.
 
 import os
+import sys
 
 import chromadb
 import streamlit as st
 from dotenv import load_dotenv
+from google.genai import errors as genai_errors
 
 import ingest
 
@@ -60,15 +62,25 @@ question = st.text_input("Your question", placeholder="e.g. How do I create a Py
 ask_clicked = st.button("Ask")
 
 if ask_clicked and question.strip():
-    with st.spinner("Thinking..."):
-        answer_text, sources = answer(question)
+    try:
+        with st.spinner("Thinking..."):
+            answer_text, sources = answer(question)
 
-    st.subheader("Answer")
-    st.write(answer_text)
+        st.subheader("Answer")
+        st.write(answer_text)
 
-    if sources:
-        with st.expander("Sources"):
-            for source in sources:
-                st.write(f"- {source}")
+        if sources:
+            with st.expander("Sources"):
+                for source in sources:
+                    st.write(f"- {source}")
+    except genai_errors.APIError as e:
+        # Log the real error server-side (visible in Streamlit Cloud's
+        # app logs) so it can be debugged, but never show a raw
+        # traceback to the user -- just a plain-English message.
+        print(f"Gemini API error: {e}", file=sys.stderr)
+        if e.code == 429:
+            st.error("The daily API quota has been reached — please try again tomorrow.")
+        else:
+            st.error("Something went wrong talking to the AI model. Please try again in a moment.")
 elif ask_clicked:
     st.warning("Type a question first.")
