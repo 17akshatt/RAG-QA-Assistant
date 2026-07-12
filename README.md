@@ -4,8 +4,7 @@ A "chat with your documents" web app. Ask it a question, and it answers **using 
 
 This is a Retrieval-Augmented Generation (RAG) system: the model doesn't answer from memory, it retrieves relevant text from an indexed knowledge base and grounds its answer in that text, which prevents made-up answers ("hallucinations") and makes every answer traceable to a source file.
 
-<!-- Screenshot: replace with an actual screenshot of the app in Answer/Sources state -->
-<!-- ![screenshot](screenshot.png) -->
+![screenshot](screenshot.png)
 
 **Live demo:** https://rag-app-assistant-my4m2hkty2ovktagqywdsx.streamlit.app
 
